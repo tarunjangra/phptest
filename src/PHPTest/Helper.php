@@ -8,9 +8,10 @@
 
 namespace PHPTest;
 
-
 class Helper
 {
+    private static $db = false;
+
     public static function see($var, $var_dump = false){
         echo "<pre>";
         if($var_dump){
@@ -53,25 +54,32 @@ class Helper
     }
 
     /**
-     * @param $model Provide name of the model
-     * @return mixed return available model instance
+     * @return bool true if user is logged in and have User instance
      */
+    public static function gateway(){
+        return (isset($_SESSION['login']) && unserialize($_SESSION['login']) instanceof \PHPTest\Entities\User);
+    }
 
-    public static function modelFactory($model){
-        global $app_config;
-        $model = ucwords($model);
-        $ModelObject = "\\PHPTest\\Models\\{$model}";
-        try{
-            if(!class_exists($ModelObject)){
-                throw new \PHPTest\Models\Exceptions\NotFoundException("Sorry, No model is available.");
-            }
-        }
-        catch(\PHPTest\Models\Exceptions\NotFoundException $e){
-            echo $e->getMessage(). $e->getCode();
-        }
+    /**
+     * set value in session
+     * @param $property
+     * @param $value
+     */
+    public static function setSession($property, $value){
+        $_SESSION[$property] = $value;
+    }
 
-        return new $ModelObject($app_config);
+    /**
+     * Get value from session
+     * @param $property
+     * @return mixed
+     */
+    public static function getSession($property){
+        return $_SESSION[$property];
+    }
 
+    public static function getLoggedInUser(){
+        return unserialize($_SESSION['login']);
     }
 
 }

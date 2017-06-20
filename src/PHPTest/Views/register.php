@@ -5,7 +5,6 @@
     <form method="post">
         <div class="form-group">
             <input type="email" name="posted_params[email]" class="form-control"  placeholder="Enter email">
-            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
         </div>
         <div class="form-group">
             <input type="text" name="posted_params[name]" class="form-control" placeholder="Name">

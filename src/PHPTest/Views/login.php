@@ -1,7 +1,12 @@
 <!--LOGIN-->
 <div>
+    <?php if($message){
+        ?>
+        <span class="label label-warning"><?=$message?></span>
+    <?php
+    } ?>
     <h2>Login</h2>
-    <form method="post">
+    <form method="post" action="?controller=site&action=login">
         <div class="form-group">
             <input type="email" name="posted_params[email]" class="form-control"  placeholder="Enter email">
         </div>
