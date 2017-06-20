@@ -21,6 +21,10 @@ class Helper
         echo "</pre>";
     }
 
+    /**
+     * @return mixed current controller's instance
+     */
+
     public static function controllerFactory(){
         global $app_config;
         $controller = ucwords(isset($_REQUEST['controller'])?$_REQUEST['controller']:'site');

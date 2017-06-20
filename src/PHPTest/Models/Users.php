@@ -2,8 +2,7 @@
 
 namespace PHPTest\Models;
 
-class Users extends BaseModel
-{
+class Users extends BaseModel {
 
 
 }
