@@ -1,0 +1,9 @@
+{
+  "username": "root",
+  "password": "",
+  "hostname": "localhost",
+  "driver": "pdo_sqlite",
+  "dbname": "cricket.sqlite",
+  "theme" : "html",
+  "path":"database/"
+}
