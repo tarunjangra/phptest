@@ -1,9 +1,7 @@
 <?php
 
 namespace PHPTest\Controllers;
-
 use PHPTest\Controllers\Exceptions\NotFoundException;
-use PHPTest\Helper;
 
 abstract class BaseController
 {

@@ -10,6 +10,8 @@ class Site extends BaseController {
     }
 
     public function actionLogin(){
+        $users = Helper::modelFactory('Users');
+        Helper::see($users);
         return $this->render(['view' => 'login']);
     }
 
