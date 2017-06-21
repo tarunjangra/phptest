@@ -4,5 +4,4 @@ namespace PHPTest\Entities;
 
 class User{
 
-
 }

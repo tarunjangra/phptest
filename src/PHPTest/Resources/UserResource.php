@@ -4,6 +4,9 @@ namespace PHPTest\Resources;
 class UserResource extends \PHPTest\AbstractResource {
 
 
+    function __construct() {
+        $this->createTable();
+    }
 
     public function get($id = null) {
         if ($id === null) {
@@ -35,6 +38,23 @@ class UserResource extends \PHPTest\AbstractResource {
         }
 
         return $users;
+    }
+
+    public function createTable(){
+        $this->getEntityManager()->query("
+        CREATE TABLE IF NOT EXISTS users  (
+              id INT PRIMARY KEY AUTO_INCREMENT,
+              name varchar(100),
+              email varchar(200) UNIQUE,
+              password varchar(200)
+            );
+        ");
+
+        $this->getEntityManager()->insert("users", [
+            "email" => "raj@izap.in",
+            "password" => "password",
+            "name" => 'Raj Malhotra'
+        ]);
     }
 
 }
