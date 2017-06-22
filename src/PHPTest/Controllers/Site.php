@@ -2,6 +2,7 @@
 
 namespace PHPTest\Controllers;
 
+use PHPTest\Controllers\Exceptions\ValidationException;
 use PHPTest\Helper;
 use PHPTest\Resources\UserResource;
 
@@ -18,21 +19,44 @@ class Site extends BaseController {
         if(isset($_POST['posted_params'])) {
             $userResource = new UserResource();
             $user = $userResource->getByEmailAndPassword($_POST['posted_params']['email'],$_POST['posted_params']['password']);
-            Helper::setSession('login',serialize($user));
-            if($this->action == 'login'){
+            if($user){
+                Helper::setSession('login',serialize($user));
+                Helper::setSuccessFlashMessage("You are logged in successfully.");
                 header("Location: /");
-            }else{
-                header("Location: ".$_SERVER[HTTP_REFERER]);
+                exit;
+            }else {
+                throw new ValidationException("Invalid email/password combination.");
             }
-        }else {
-            return $this->render(['view' => 'login']);
         }
+
+        return $this->render(['view' => 'login']);
     }
 
     public function actionRegister(){
-        if(isset($_REQUEST['posted_params'])) {
+        if(isset($_POST['posted_params'])) {
 
-            Helper::see(Helper::modelFactory('Users',"select * from users"));
+            if(!filter_var($_POST['posted_params']['email'],FILTER_VALIDATE_EMAIL)){
+                throw new ValidationException("Invalid email id.");
+            }
+
+            if(strlen($_POST['posted_params']['password']) < 8){
+                throw new ValidationException("Minimum password length should be 8.");
+            }
+
+            if($_POST['posted_params']['password'] != $_POST['posted_params']['repeat_password']){
+                throw new ValidationException("Repeat password should be matched with password.");
+            }
+            $userParams = [
+                "email" => $_POST['posted_params']['email'],
+                "name" => $_POST['posted_params']['name'],
+                "password" => $_POST['posted_params']['password'],
+            ];
+            $userResource = new UserResource();
+            if($userResource->put($userParams)){
+                Helper::setSuccessFlashMessage("You are successfully registered. Login below with email/password.");
+                return $this->render(['view' => 'login']);
+            }
+
         }
         return $this->render(['view' => 'register']);
     }
@@ -49,5 +73,7 @@ class Site extends BaseController {
     public function actionLogout(){
         unset($_SESSION['login']);
         header("Location: /");
+        exit;
     }
+
 }

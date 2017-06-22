@@ -28,7 +28,7 @@
                 <div style="float:right; position: relative; top:8px;">
                     <form class="form-inline" method="post" action="?controller=site&action=search">
                         <div class="form-group">
-                            <input type="text" name="posted_params[term]" class="form-control"  placeholder="Search...">
+                            <input type="text" name="posted_params[term]" class="form-control" value="<?=$posted_params['term']?>"  placeholder="Search...">
                         </div>
                         <button type="submit" class="btn btn-primary">Go</button>
                     </form>
@@ -36,6 +36,9 @@
             </div>
         </div>
     </nav>
+
+    <span class="label label-danger" style="float: right"><?=\PHPTest\Helper::getFlashMessage('failure')?></span>
+    <span class="label label-success"  style="float: right"><?=\PHPTest\Helper::getFlashMessage('success')?></span>
     <?php
       include($this->config->views.DIRECTORY_SEPARATOR.$view.'.php');
     ?>

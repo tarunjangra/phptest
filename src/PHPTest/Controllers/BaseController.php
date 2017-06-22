@@ -2,6 +2,7 @@
 
 namespace PHPTest\Controllers;
 use PHPTest\Controllers\Exceptions\NotFoundException;
+use PHPTest\Helper;
 
 abstract class BaseController
 {
@@ -28,7 +29,6 @@ abstract class BaseController
     }
 
     public function render($params = array()){
-
         $default = ['posted_params' => $_REQUEST['posted_params']];
         $params = $params + $default;
         extract($params);

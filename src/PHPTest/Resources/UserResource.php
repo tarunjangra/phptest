@@ -40,6 +40,11 @@ class UserResource extends \PHPTest\AbstractResource {
         return $users;
     }
 
+    public function put($params){
+        $this->getEntityManager()->insert("users", $params);
+        return $this->getEntityManager()->id();
+    }
+
     public function createTable(){
         $this->getEntityManager()->query("
         CREATE TABLE IF NOT EXISTS users  (

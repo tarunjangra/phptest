@@ -8,10 +8,14 @@
 
 namespace PHPTest;
 
-class Helper
-{
-    private static $db = false;
+use PHPTest\Controllers\Exceptions\ValidationException;
 
+class Helper {
+    /**
+     * Will help you to print formatted array
+     * @param $var
+     * @param bool $var_dump
+     */
     public static function see($var, $var_dump = false){
         echo "<pre>";
         if($var_dump){
@@ -42,12 +46,18 @@ class Helper
             $action_output = $call_of_dynamic_controller->$action();
         }
         catch (\PHPTest\Controllers\Exceptions\NotFoundException $e){
-            echo $e->getMessage().$e->getCode();
+            self::setFailureFlashMessage($e->getMessage());
+            header("Location: /?controller={$call_of_dynamic_controller->controller}&action={$call_of_dynamic_controller->action}");
         }
         catch(\PDOException $e){
             if($e->getCode() == '2002') {
-                echo "Database is not available.";
+                self::setFailureFlashMessage($e->getMessage());
+                header("Location: /?controller={$call_of_dynamic_controller->controller}&action={$call_of_dynamic_controller->action}");
             }
+        }
+        catch(ValidationException $e){
+            self::setFailureFlashMessage($e->getMessage());
+           header("Location: /?controller={$call_of_dynamic_controller->controller}&action={$call_of_dynamic_controller->action}");
         }
 
         return $action_output;
@@ -78,8 +88,41 @@ class Helper
         return $_SESSION[$property];
     }
 
+    /**
+     * @return mixed Get object of logged in user
+     */
+
     public static function getLoggedInUser(){
         return unserialize($_SESSION['login']);
+    }
+
+    /**
+     * @param $message set failure message in session
+     */
+    public static function setFailureFlashMessage($message){
+        return self::setSession('flash_message',['failure' => $message]);
+    }
+
+    /**
+     * @param $message set success message in session
+     */
+
+    public static function setSuccessFlashMessage($message){
+        return self::setSession('flash_message',['success' => $message]);
+    }
+
+    /**
+     * @param string $type success/failure default is "success"
+     * @return mixed Get success/failure message and flush from session
+     */
+
+    public static function getFlashMessage($type='success'){
+        if(isset($_SESSION['flash_message'][$type])){
+            $message = self::getSession('flash_message')[$type];
+            unset($_SESSION['flash_message'][$type]);
+            return $message;
+        }
+        return false;
     }
 
 }
